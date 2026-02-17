@@ -1,0 +1,20 @@
+[
+  {
+    "id": "001",
+    "cliente": "Juan Pérez",
+    "pedido": "2 Pepperoni grandes",
+    "status": "preparing"
+  },
+  {
+    "id": "002",
+    "cliente": "María López",
+    "pedido": "1 Hawaiana + 1 Coca",
+    "status": "ready"
+  },
+  {
+    "id": "003",
+    "cliente": "Carlos Gómez",
+    "pedido": "Pizza Mexicana familiar",
+    "status": "preparing"
+  }
+]
