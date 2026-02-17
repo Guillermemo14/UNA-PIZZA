@@ -3,7 +3,7 @@
     "id": "001",
     "cliente": "Juan Pérez",
     "pedido": "2 Pepperoni grandes",
-    "status": "preparing"
+    "status": "ready"
   },
   {
     "id": "002",
