@@ -20,27 +20,14 @@
         <p class="subtitle">Estado actual de pedidos</p>
 
         <!-- Lista de órdenes -->
-        <div class="orders">
-
-            <!-- Cada orden es una tarjeta -->
-            <div class="order-card">
-                <h2>Orden #001</h2>
-                <p><strong>Cliente:</strong> Juan Pérez</p>
-                <p><strong>Pedido:</strong> 2 Pepperoni grandes</p>
-                <p class="status preparing">En preparación</p>
-            </div>
-
-            <div class="order-card">
-                <h2>Orden #002</h2>
-                <p><strong>Cliente:</strong> María López</p>
-                <p><strong>Pedido:</strong> 1 Hawaiana + 1 Coca</p>
-                <p class="status ready">Lista</p>
-            </div>
-
+        <div class="orders" id="orders-container">
+            <!-- Aquí se cargarán las órdenes dinámicamente -->
         </div>
 
     </div>
-
+    
+    <script src="script.js"></script>
+    
 </body>
 </html>
 
