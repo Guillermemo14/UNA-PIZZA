@@ -1,39 +1,73 @@
-// Esta función carga las órdenes desde el archivo JSON
+// Variable para guardar el tiempo de inicio de cada orden
+let tiemposInicio = {};
+
+// Función principal que carga órdenes
 async function cargarOrdenes() {
 
-    // fetch obtiene datos desde un archivo externo
     const respuesta = await fetch('orders.json');
-
-    // Convertimos la respuesta a formato JSON
     const ordenes = await respuesta.json();
 
-    // Seleccionamos el contenedor donde se mostrarán las órdenes
     const contenedor = document.getElementById('orders-container');
-
-    // Limpiamos el contenedor antes de agregar contenido
     contenedor.innerHTML = "";
 
-    // Recorremos cada orden del JSON
     ordenes.forEach(orden => {
 
-        // Creamos un div para cada orden
         const tarjeta = document.createElement('div');
         tarjeta.classList.add('order-card');
 
-        // Creamos el contenido interno de la tarjeta
+        // Si la orden está en preparación y no tiene tiempo registrado, guardamos hora actual
+        if (orden.status === "preparing" && !tiemposInicio[orden.id]) {
+            tiemposInicio[orden.id] = new Date();
+        }
+
+        // Calcular tiempo transcurrido
+        let tiempoTexto = "";
+
+        if (orden.status === "preparing") {
+            const ahora = new Date();
+            const inicio = tiemposInicio[orden.id];
+            const minutos = Math.floor((ahora - inicio) / 60000);
+            tiempoTexto = `<p><strong>Tiempo:</strong> ${minutos} min</p>`;
+        }
+
         tarjeta.innerHTML = `
             <h2>Orden #${orden.id}</h2>
             <p><strong>Cliente:</strong> ${orden.cliente}</p>
             <p><strong>Pedido:</strong> ${orden.pedido}</p>
+            ${tiempoTexto}
             <p class="status ${orden.status}">
                 ${orden.status === "preparing" ? "En preparación" : "Lista"}
             </p>
         `;
 
-        // Agregamos la tarjeta al contenedor
+        // Evento para cambiar estado al hacer click
+        tarjeta.addEventListener("click", () => cambiarEstado(orden.id));
+
         contenedor.appendChild(tarjeta);
     });
 }
 
-// Ejecutamos la función cuando la página carga
+// Función que cambia estado localmente (solo visual)
+async function cambiarEstado(id) {
+
+    const respuesta = await fetch('orders.json');
+    const ordenes = await respuesta.json();
+
+    // Cambiamos el estado en memoria
+    ordenes.forEach(orden => {
+        if (orden.id === id) {
+            orden.status = orden.status === "preparing" ? "ready" : "preparing";
+        }
+    });
+
+    // ⚠️ Esto NO guarda el cambio permanentemente
+    // Solo recarga visualmente
+
+    cargarOrdenes();
+}
+
+// Cargar al iniciar
 cargarOrdenes();
+
+// Actualizar cada 10 segundos
+setInterval(cargarOrdenes, 10000);
