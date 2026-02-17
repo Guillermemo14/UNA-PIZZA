@@ -67,3 +67,9 @@ h1 {
     background-color: #2a9d8f;
     color: white;
 }
+
+/* Indica que es clickeable */
+.order-card {
+    cursor: pointer; 
+}
+
