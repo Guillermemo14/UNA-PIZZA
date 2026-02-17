@@ -1,0 +1,69 @@
+/* Estilos generales del cuerpo */
+body {
+    font-family: Arial, sans-serif; /* Tipo de letra */
+    background-color: #f4f4f4; /* Fondo gris claro */
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal centrado */
+.container {
+    width: 80%;
+    margin: auto; /* Centra horizontalmente */
+    padding: 20px;
+}
+
+/* Título principal */
+h1 {
+    text-align: center;
+    color: #d62828; /* Rojo tipo pizza */
+}
+
+/* Subtítulo */
+.subtitle {
+    text-align: center;
+    color: #555;
+}
+
+/* Contenedor de órdenes */
+.orders {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px; /* Espacio entre tarjetas */
+    margin-top: 30px;
+}
+
+/* Tarjeta individual */
+.order-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    transition: transform 0.2s ease;
+}
+
+/* Efecto cuando pasas el mouse */
+.order-card:hover {
+    transform: scale(1.03);
+}
+
+/* Estado general */
+.status {
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Estado en preparación */
+.preparing {
+    background-color: #ffb703;
+    color: white;
+}
+
+/* Estado lista */
+.ready {
+    background-color: #2a9d8f;
+    color: white;
+}
