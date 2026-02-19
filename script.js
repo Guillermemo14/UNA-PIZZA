@@ -1,11 +1,21 @@
-// Variable para guardar el tiempo de inicio de cada orden
-let tiemposInicio = {};
+// Configuración de Supabase
+const supabaseUrl = "sb_publishable_m6_SfupjKAIuc38QzFXfHA_eu22GeYc";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5a2JpaXZ6Y21pemtoeHBsYmVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzOTM4NjgsImV4cCI6MjA4Njk2OTg2OH0.rcnykRqLCPEHctmmngaMenr3E9Bu0Z-vnI0l-Cmudco";
 
-// Función principal que carga órdenes
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// Función para cargar órdenes desde Supabase
 async function cargarOrdenes() {
 
-    const respuesta = await fetch('orders.json');
-    const ordenes = await respuesta.json();
+    const { data: ordenes, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+    if (error) {
+        console.error("Error cargando órdenes:", error);
+        return;
+    }
 
     const contenedor = document.getElementById('orders-container');
     contenedor.innerHTML = "";
@@ -15,53 +25,35 @@ async function cargarOrdenes() {
         const tarjeta = document.createElement('div');
         tarjeta.classList.add('order-card');
 
-        // Si la orden está en preparación y no tiene tiempo registrado, guardamos hora actual
-        if (orden.status === "preparing" && !tiemposInicio[orden.id]) {
-            tiemposInicio[orden.id] = new Date();
-        }
-
-        // Calcular tiempo transcurrido
-        let tiempoTexto = "";
-
-        if (orden.status === "preparing") {
-            const ahora = new Date();
-            const inicio = tiemposInicio[orden.id];
-            const minutos = Math.floor((ahora - inicio) / 60000);
-            tiempoTexto = `<p><strong>Tiempo:</strong> ${minutos} min</p>`;
-        }
-
         tarjeta.innerHTML = `
-            <h2>Orden #${orden.id}</h2>
+            <h2>Orden</h2>
             <p><strong>Cliente:</strong> ${orden.cliente}</p>
             <p><strong>Pedido:</strong> ${orden.pedido}</p>
-            ${tiempoTexto}
             <p class="status ${orden.status}">
                 ${orden.status === "preparing" ? "En preparación" : "Lista"}
             </p>
         `;
 
-        // Evento para cambiar estado al hacer click
-        tarjeta.addEventListener("click", () => cambiarEstado(orden.id));
+        tarjeta.addEventListener("click", () => cambiarEstado(orden.id, orden.status));
 
         contenedor.appendChild(tarjeta);
     });
 }
 
-// Función que cambia estado localmente (solo visual)
-async function cambiarEstado(id) {
+// Cambiar estado en la base de datos REAL
+async function cambiarEstado(id, estadoActual) {
 
-    const respuesta = await fetch('orders.json');
-    const ordenes = await respuesta.json();
+    const nuevoEstado = estadoActual === "preparing" ? "ready" : "preparing";
 
-    // Cambiamos el estado en memoria
-    ordenes.forEach(orden => {
-        if (orden.id === id) {
-            orden.status = orden.status === "preparing" ? "ready" : "preparing";
-        }
-    });
+    const { error } = await supabase
+        .from('orders')
+        .update({ status: nuevoEstado })
+        .eq('id', id);
 
-    // ⚠️ Esto NO guarda el cambio permanentemente
-    // Solo recarga visualmente
+    if (error) {
+        console.error("Error actualizando:", error);
+        return;
+    }
 
     cargarOrdenes();
 }
@@ -69,5 +61,5 @@ async function cambiarEstado(id) {
 // Cargar al iniciar
 cargarOrdenes();
 
-// Actualizar cada 10 segundos
-setInterval(cargarOrdenes, 10000);
+// Actualizar cada 5 segundos
+setInterval(cargarOrdenes, 5000);
