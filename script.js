@@ -1,5 +1,5 @@
 // Configuración de Supabase
-const supabaseUrl = "sb_publishable_m6_SfupjKAIuc38QzFXfHA_eu22GeYc";
+const supabaseUrl = "https://uykbiivzcmizkhxplbec.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5a2JpaXZ6Y21pemtoeHBsYmVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEzOTM4NjgsImV4cCI6MjA4Njk2OTg2OH0.rcnykRqLCPEHctmmngaMenr3E9Bu0Z-vnI0l-Cmudco";
 
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
